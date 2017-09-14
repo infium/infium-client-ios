@@ -1,11 +1,3 @@
-//
-//  InfiumTests.m
-//  InfiumTests
-//
-//  Created by Marcus Hammar on 2017-09-14.
-//  Copyright © 2017 Infium AB. All rights reserved.
-//
-
 #import <XCTest/XCTest.h>
 
 @interface InfiumTests : XCTestCase

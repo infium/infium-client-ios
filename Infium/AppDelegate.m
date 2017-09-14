@@ -1,51 +1,65 @@
-//
-//  AppDelegate.m
-//  Infium
-//
-//  Created by Marcus Hammar on 2017-09-14.
-//  Copyright © 2017 Infium AB. All rights reserved.
-//
-
 #import "AppDelegate.h"
-
-@interface AppDelegate ()
-
-@end
+#include <sys/types.h>
+#include <sys/sysctl.h>
 
 @implementation AppDelegate
 
+- (NSString *)clientPlatform{
+    return @"iOS";
+}
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+- (NSString *)clientPlatformVersion{
+    return [[UIDevice currentDevice] systemVersion];
+}
+
+- (NSString *)clientPlatformDevice{
+    size_t size;
+    sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+    char *machine = malloc(size);
+    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+    NSString *platform = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+    free(machine);
+    return platform;
+}
+
+- (NSString *)clientPlatformLanguage{
+    return [[NSLocale preferredLanguages] objectAtIndex:0];
+}
+
+- (NSString *)clientAppVersion{
+    return [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleShortVersionString"];
+}
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    //ClientLoginUrl = @"https://infium-eu.appspot.com/api/";
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    UINavigationController *navController=[[UINavigationController alloc] init];
+    MainView *firstController=[[MainView alloc] init];
+    [firstController setTitle:@"Infium"];
+    [navController pushViewController:firstController animated:NO];
+    [self.window setRootViewController:navController];
+    
+    self.window.backgroundColor = [UIColor whiteColor];
+    [self.window makeKeyAndVisible];
     return YES;
 }
 
-
-- (void)applicationWillResignActive:(UIApplication *)application {
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+- (void)applicationWillResignActive:(UIApplication *)application{
 }
 
-
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+- (void)applicationDidEnterBackground:(UIApplication *)application{
 }
 
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-    // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+- (void)applicationWillEnterForeground:(UIApplication *)application{
 }
 
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+- (void)applicationDidBecomeActive:(UIApplication *)application{
 }
 
-
-- (void)applicationWillTerminate:(UIApplication *)application {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+- (void)applicationWillTerminate:(UIApplication *)application{
 }
-
 
 @end
