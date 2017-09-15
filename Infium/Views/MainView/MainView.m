@@ -59,7 +59,7 @@
                 
                 self.username.text = nil;
                 self.password.text = nil;
-                //[self.url resignFirstResponder];
+                [self.url resignFirstResponder];
                 //[self.company resignFirstResponder];
                 [self.username resignFirstResponder];
                 [self.password resignFirstResponder];
@@ -96,12 +96,12 @@
 
 -(void)redrawButtons{
     if (ClientLoginToken == nil){
-        //[self.url setEnabled:YES];
+        [self.url setEnabled:YES];
         //[self.company setEnabled:YES];
         [self.username setEnabled:YES];
         [self.password setEnabled:YES];
         
-        //[self.url setHidden:NO];
+        [self.url setHidden:NO];
         //[self.company setHidden:NO];
         [self.username setHidden:NO];
         [self.password setHidden:NO];
@@ -117,12 +117,12 @@
         [self.alreadyLogggedInLabel setHidden:YES];
         [self.version setHidden:NO];
     }else{
-        //[self.url setEnabled:NO];
+        [self.url setEnabled:NO];
         //[self.company setEnabled:NO];
         [self.username setEnabled:NO];
         [self.password setEnabled:NO];
         
-        //[self.url setHidden:YES];
+        [self.url setHidden:YES];
         //[self.company setHidden:YES];
         [self.username setHidden:YES];
         [self.password setHidden:YES];
@@ -172,6 +172,13 @@
 }
 
 -(IBAction)loginButtonTapped{
+     if ([[self.url.text substringToIndex:8] isEqualToString:@"https://"]){
+     [self login];
+     }else{
+     [[[UIAlertView alloc] initWithTitle:@"Error" message:@"The server URL must start with 'https://'" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+     }
+    
+    /*
     NSArray *strings = [self.username.text componentsSeparatedByString:@"@"];
     
     if ([strings count] < 2 ){
@@ -193,20 +200,23 @@
         }else{
             [self login];
         }
-        
     }
+     */
 }
 
 -(void)login{
     NSArray *strings = [self.username.text componentsSeparatedByString:@"@"];
     
     ClientLoginCompany = [strings objectAtIndex:1];
+    ClientLoginUrl = self.url.text;
     
+    /*
     if ([strings count] > 2){
         ClientLoginUrl = [strings objectAtIndex:2];
     }else{
         ClientLoginUrl = @"https://infium-eu.appspot.com/api/";
     }
+     */
     
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
@@ -263,16 +273,16 @@
 {
     [super viewDidLoad];
     
-    //self.url.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"url"];
+    self.url.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"url"];
     //self.company.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"company"];
     
     ClientLoginUrl = [[NSUserDefaults standardUserDefaults] objectForKey:@"url"];
     ClientLoginCompany = [[NSUserDefaults standardUserDefaults] objectForKey:@"company"];
     ClientLoginToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
     
-    //if ([self.url.text isEqualToString:@""]){
-    //    self.url.text = @"https://infium-eu.appspot.com/api/";
-    //}
+    if ([self.url.text isEqualToString:@""]){
+        self.url.text = @"https://infium-eu.appspot.com/api/";
+    }
     
     [self setTitle:@"Welcome"];
     
