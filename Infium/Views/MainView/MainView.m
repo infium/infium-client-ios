@@ -42,7 +42,7 @@
         NSDictionary *theData = [[[SBJsonParser alloc] init] objectWithData:self.receivedDataServerFirst];
         
         if (theData == nil){
-            [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Cannot log in." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [self showAlertMessage:@"Cannot log in" withTitle:nil];
         }
         
         if ([[theData objectForKey:@"Response"] isEqualToString:@"LoginToken"]){
@@ -68,7 +68,7 @@
                 
                 [self redrawButtons];
             }else{
-                [[[UIAlertView alloc] initWithTitle:nil message:@"Wrong username and/or password" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+                [self showAlertMessage:@"Wrong username and/or password" withTitle:nil];
             }
             
         }
@@ -166,7 +166,7 @@
         NSMutableData *data = [[NSMutableData alloc] init];
         self.receivedDataServerSecond = data;
     } else {
-        [[[UIAlertView alloc] initWithTitle:@"Connection error" message:@"Failed to initiate the connection to the server" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [self showAlertMessage:@"Failed to initiate the connection to the server" withTitle:nil];
     }
     
 }
@@ -175,7 +175,7 @@
      if ([[self.url.text substringToIndex:8] isEqualToString:@"https://"]){
      [self login];
      }else{
-     [[[UIAlertView alloc] initWithTitle:@"Error" message:@"The server URL must start with 'https://'" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+         [self showAlertMessage:@"The server URL must start with 'https://'" withTitle:nil];
      }
     
     /*
@@ -256,7 +256,7 @@
         NSMutableData *data = [[NSMutableData alloc] init];
         self.receivedDataServerFirst = data;
     } else {
-        [[[UIAlertView alloc] initWithTitle:@"Connection error" message:@"Failed to initiate the connection to the server" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [self showAlertMessage:@"Failed to initiate the connection to the server" withTitle:nil];
     }
 }
 
@@ -307,6 +307,13 @@
     [self.username becomeFirstResponder];
     
     [super viewDidAppear:(BOOL)animated];
+}
+
+-(void)showAlertMessage:(NSString *)message withTitle: (NSString *)title{
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* okButton = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [alertController addAction:okButton];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 -(UIColor *)colorFromHexString:(NSString *)hexString {
