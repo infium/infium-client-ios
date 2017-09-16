@@ -160,7 +160,7 @@
         NSMutableData *data = [[NSMutableData alloc] init];
         self.receivedDataServerFirst = data;
     } else {
-        [[[UIAlertView alloc] initWithTitle:@"Connection error" message:@"Failed to initiate the connection to the server" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [self showAlertMessage:@"Failed to initiate the connection to the server" withTitle:nil];
     }
 }
 
@@ -204,8 +204,15 @@
         self.connectionServerFirst = nil;
         self.receivedDataServerFirst = nil;
         
-        [[[UIAlertView alloc] initWithTitle:@"Connection error" message:@"Failed to complete the connection to the server" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [self showAlertMessage:@"Failed to complete the connection to the server" withTitle:nil];
     }
+}
+
+-(void)showAlertMessage:(NSString *)message withTitle: (NSString *)title{
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* okButton = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [alertController addAction:okButton];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 @end

@@ -152,7 +152,7 @@
     if ([actions count] > 0){
         if ([[[actions objectAtIndex:0] objectForKey:@"Action"] isEqualToString:@"MessageFlash"]){
             
-            [[[UIAlertView alloc] initWithTitle:[[actions objectAtIndex:0] objectForKey:@"Message"] message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+            [self showAlertMessage:nil withTitle:[[actions objectAtIndex:0] objectForKey:@"Message"]];
             
             [actions removeObjectAtIndex:0];
             [self runLocalActions:actions];
@@ -904,7 +904,7 @@
 }
 
 -(IBAction)timeTapped:(id)sender{
-    [[[UIAlertView alloc] initWithTitle:@"Server time analysis" message:self.debug delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    [self showAlertMessage:self.debug withTitle:@"Server time analysis"];
 }
 
 
@@ -943,7 +943,7 @@
         NSMutableData *data = [[NSMutableData alloc] init];
         self.receivedDataServerFirst = data;
     } else {
-        [[[UIAlertView alloc] initWithTitle:@"Connection error" message:@"Failed to initiate the connection to the server" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [self showAlertMessage:@"Failed to initiate the connection to the server" withTitle:nil];
     }
     
 }
@@ -975,7 +975,7 @@
         NSMutableData *data = [[NSMutableData alloc] init];
         self.receivedDataServerSecond = data;
     } else {
-        [[[UIAlertView alloc] initWithTitle:@"Connection error" message:@"Failed to initiate the connection to the server" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [self showAlertMessage:@"Failed to initiate the connection to the server" withTitle:nil];
     }
     
 }
@@ -1492,7 +1492,7 @@
         self.connectionServerFirst = nil;
         self.receivedDataServerFirst = nil;
         
-        [[[UIAlertView alloc] initWithTitle:@"Connection error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [self showAlertMessage:[error localizedDescription] withTitle:@"Connection error"];
     }
     
     if (connection == self.connectionServerSecond)
@@ -1500,7 +1500,7 @@
         self.connectionServerSecond = nil;
         self.receivedDataServerSecond = nil;
         
-        [[[UIAlertView alloc] initWithTitle:@"Connection error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [self showAlertMessage:[error localizedDescription] withTitle:@"Connection error"];
     }
 }
 
@@ -1589,6 +1589,13 @@
     [scanner setScanLocation:1]; // bypass '#' character
     [scanner scanHexInt:&rgbValue];
     return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
+}
+
+-(void)showAlertMessage:(NSString *)message withTitle: (NSString *)title{
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* okButton = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [alertController addAction:okButton];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
