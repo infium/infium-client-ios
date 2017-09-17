@@ -172,36 +172,29 @@
 }
 
 -(IBAction)loginButtonTapped{
-     if ([[self.url.text substringToIndex:8] isEqualToString:@"https://"]){
-     [self login];
-     }else{
-         [self showAlertMessage:@"The server URL must start with 'https://'" withTitle:nil];
-     }
-    
-    /*
+    bool acceptNoSsl = false;
     NSArray *strings = [self.username.text componentsSeparatedByString:@"@"];
     
-    if ([strings count] < 2 ){
-        [[[UIAlertView alloc] initWithTitle:@"Error" message:@"The username must be in the format 'name@123456'" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-    }else{
-        
-        if ([strings count] > 2){
-            
-            if ([[[strings objectAtIndex:2] substringToIndex:8] isEqualToString:@"https://"]){
-                [self login];
-                
-            }else{
-                if (([strings count] > 3) && ([[strings objectAtIndex:3] isEqualToString:@"NOSSL"])){
-                    [self login];
-                }else{
-                    [[[UIAlertView alloc] initWithTitle:@"Error" message:@"The server URL must start with 'https://'" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-                }
-            }
+    if (!([strings count] == 2 || [strings count] == 3)){
+        [self showAlertMessage:@"The username must be in the format 'name@123456'" withTitle:nil];
+        return;
+    }
+    
+    if ([strings count] == 3){
+        if ([[strings objectAtIndex:2] isEqualToString:@"NOSSL"]){
+            acceptNoSsl = true;
         }else{
-            [self login];
+            [self showAlertMessage:@"The username must be in the format 'name@123456'" withTitle:nil];
+            return;
         }
     }
-     */
+
+    if (acceptNoSsl == false && ![[self.url.text substringToIndex:8] isEqualToString:@"https://"]){
+         [self showAlertMessage:@"The server URL must start with 'https://'" withTitle:nil];
+         return;
+    }
+
+    [self login];
 }
 
 -(void)login{
