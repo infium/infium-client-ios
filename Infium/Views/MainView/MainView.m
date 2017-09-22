@@ -188,24 +188,14 @@
 }
 
 -(IBAction)loginButtonTapped{
-    bool acceptNoSsl = false;
     NSArray *strings = [self.username.text componentsSeparatedByString:@"@"];
     
-    if (!([strings count] == 2 || [strings count] == 3)){
+    if ([strings count] != 2){
         [self showAlertMessage:@"The username must be in the format 'name@123456'" withTitle:nil];
         return;
     }
     
-    if ([strings count] == 3){
-        if ([[strings objectAtIndex:2] isEqualToString:@"NOSSL"]){
-            acceptNoSsl = true;
-        }else{
-            [self showAlertMessage:@"The username must be in the format 'name@123456'" withTitle:nil];
-            return;
-        }
-    }
-
-    if (acceptNoSsl == false && ![[self.url.text substringToIndex:8] isEqualToString:@"https://"]){
+    if (![[self.url.text substringToIndex:8] isEqualToString:@"https://"]){
          [self showAlertMessage:@"The server URL must start with 'https://'" withTitle:nil];
          return;
     }
